@@ -13,11 +13,8 @@ var Auth = require('../../passport/auth');
 var usersController = require('./users_ctrl');
 
 
-router.get('/', function (req, res, next) {
-    res.render('/index.html');
-});
-
 router.post('/login', function (req, res) {
+    console.log("tettt");
     usersController.loginUser(req, res);
 });
 

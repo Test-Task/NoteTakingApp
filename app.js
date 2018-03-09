@@ -12,12 +12,11 @@ var config = require('./passport/config');
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/socialmedia');
 var dbUri = config.dbUri;
-// mongoose.connect('mongodb://172.10.1.7:27017/notetaking', { user: 'notetaking', pass: 'Noytf654YtrF' });
-mongoose.connect(dbUri)
+mongoose.connect(dbUri);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection failed"));
 db.once('open', function() {
-    console.log("Note Talking conencted successfully!");
+    console.log("Note database conencted successfully!");
 });
 mongoose.set('debug', true);
 // Passport session initialization
@@ -45,9 +44,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
 
-
-require('./passport/passport')(passport);
-
+require('./routes')(app);
 
 
 app.all('/*', function(req, res, next) {
@@ -62,27 +59,6 @@ app.all('/*', function(req, res, next) {
         next();
     }
 });
-// app.all('/', function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-//     next();
-// });
-// app.use(function (req, res, next) {
-
-//         // res.header('Access-Control-Allow-Origin',  'http://172.10.55.135:5000');
-//         res.header("Access-Control-Allow-Origin", "*");
-
-//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//         // Set custom headers for CORS
-//         res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key,If-Modified-Since,Authorization');
-
-//         if (req.method === 'OPTIONS') {
-//             res.status(200).end();
-//         } else {
-//             next();
-//         }
-
-//     });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -110,7 +86,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-require('./routes')(app);
 
 
 module.exports = app;
