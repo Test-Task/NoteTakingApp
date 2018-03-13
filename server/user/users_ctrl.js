@@ -37,7 +37,7 @@ exports.registerUser = function (req, res) {
     var d = new Date();
     console.log(post);
     req.checkBody('username', "Please enter username.").notEmpty();
-    req.checkBody('password', "Password should be min 6 to 20 characters required").isLength(6, 20);
+    req.checkBody('password', "Password should be 6-20 Characters long").isLength(6, 20);
     req.checkBody('email', "Please enter a valid email address.").isEmail();
     var errors = req.validationErrors();
     if (errors) {
@@ -61,14 +61,15 @@ exports.registerUser = function (req, res) {
                         res.json({ status: 201, message: 'Email already registered.' });
                     }
                 } else {
-                    var usersdata = new usersmodel(userdata);
+                    var recordData = new usersmodel(userdata);
                     // call the built-in save method to save to the database
-                    usersdata.save(function (err, usersdata) {
+                    recordData.save(function (err, usersdata) {
                         if (err){
-                            res.json({ status: 200, message: 'Successfully registered! and email failed.' });                            
+                            console.log('in error',err)
+                            res.json({ status: 201, message: err });                            
                         }else{
                             res.json({ status: 200, message: 'Successfully registered!' });                            
-                        console.log('User saved successfully!' + usersdata._id);
+                            console.log('User saved successfully!' + usersdata._id);
                         // setup e-mail data with unicode symbols
                         
                     }
