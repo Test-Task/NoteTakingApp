@@ -37,11 +37,11 @@ exports.registerUser = function (req, res) {
     var d = new Date();
     console.log(post);
     req.checkBody('username', "Please enter username.").notEmpty();
-    req.checkBody('password', "Password should be min 6 to 20 characters required").len(6, 20);
+    req.checkBody('password', "Password should be min 6 to 20 characters required").isLength(6, 20);
     req.checkBody('email', "Please enter a valid email address.").isEmail();
     var errors = req.validationErrors();
     if (errors) {
-        res.json({ status: "202", message: errors });
+        res.json({ status: "202", message: errors[0].msg });
     } else {
         console.log('call register controller! before');
         var userdata = {
@@ -67,27 +67,10 @@ exports.registerUser = function (req, res) {
                         if (err){
                             res.json({ status: 200, message: 'Successfully registered! and email failed.' });                            
                         }else{
+                            res.json({ status: 200, message: 'Successfully registered!' });                            
                         console.log('User saved successfully!' + usersdata._id);
                         // setup e-mail data with unicode symbols
-                        var mailOptions = {
-                            from: 'viralcontentsystem@gmail.com', // sender address
-                            to: post.email, // list of receivers
-                            subject: 'Registration Successfully', // Subject line
-                            text: 'sarvesh', // plaintext body
-                            html: 'Hello ' + post.username + ',<br><br> Your account has been registered. <br><br>Thanks,<br> Admin<br>Note Taking' // html body
-                        }
-
-                        console.log(mailOptions);
-                        // send mail with defined transport object
-                        transporter.sendMail(mailOptions, function (error, response) {
-                            if (error) {
-                                console.log(error);
-                                res.json({ status: 200, message: 'Successfully registered! and email failed.' });
-                            } else {
-                                console.log("Message sent: Successfully");
-                                res.json({ status: 200, message: 'Successfully registered! and email sent.' });
-                            }
-                        });
+                        
                     }
 
                     });
